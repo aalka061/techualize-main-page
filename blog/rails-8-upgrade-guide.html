@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="What actually changed in Rails 8, the steps to upgrade without breaking production, and the pitfalls most teams miss the first time around." />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Techualize" />
+  <meta name="theme-color" content="#070a12" />
+  <link rel="canonical" href="https://techualize.com/blog/rails-8-upgrade-guide.html" />
+  <meta property="og:title" content="Rails 7 to Rails 8: A Practical Upgrade Guide — Techualize" />
+  <meta property="og:description" content="What changed in Rails 8, the steps to upgrade without breaking production, and the pitfalls most teams miss." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://techualize.com/blog/rails-8-upgrade-guide.html" />
+  <meta property="og:image" content="https://techualize.com/assets/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Rails 7 to Rails 8: A Practical Upgrade Guide" />
+  <meta name="twitter:description" content="What changed in Rails 8 and how to upgrade without breaking production." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <title>Rails 7 to Rails 8: A Practical Upgrade Guide — Techualize</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Rails 7 to Rails 8: A Practical Upgrade Guide",
+    "description": "What changed in Rails 8 and how to upgrade without breaking production.",
+    "author": { "@type": "Organization", "name": "Techualize", "url": "https://techualize.com" },
+    "publisher": { "@type": "Organization", "name": "Techualize", "url": "https://techualize.com" },
+    "datePublished": "2025-03-15",
+    "url": "https://techualize.com/blog/rails-8-upgrade-guide.html"
+  }
+  </script>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="/">Techualize</a>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="/#services">Services</a>
+        <a href="/#why">Why me</a>
+        <a href="/#process">Process</a>
+        <a href="/blog/">Blog</a>
+        <a href="/#contact" class="nav-cta">Let's talk</a>
+      </nav>
+      <button type="button" class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main style="padding-top: var(--header-h);">
+    <div class="container">
+      <div class="post-header">
+        <a class="back-link" href="/blog/">← All posts</a>
+        <span class="post-tag">Migrations</span>
+        <h1>Rails 7 to Rails 8: A Practical Upgrade Guide</h1>
+        <p class="post-lead">What actually changed, the exact steps to upgrade without breaking production, and the pitfalls most teams hit the first time around.</p>
+        <div class="post-meta">
+          <span>March 2025</span>
+          <span>9 min read</span>
+          <span>By Techualize</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-body">
+      <article class="prose">
+
+        <p>Rails 8 landed with less fanfare than some previous major versions, but it brought meaningful changes under the hood — and a handful of deprecations that will break your app if you haven't prepared. This guide covers everything you need to plan and execute a production upgrade from Rails 7.x to Rails 8.0.</p>
+
+        <p>One caveat up front: this is a practical guide, not a changelog summary. If you want the full list of changes, the <a href="https://guides.rubyonrails.org/upgrading_ruby_on_rails.html" rel="noopener noreferrer">official upgrade guide</a> is authoritative. What I'm giving you here is the operational playbook — what order to do things, what actually goes wrong, and how to recover.</p>
+
+        <h2>What changed in Rails 8</h2>
+
+        <p>The headline features in Rails 8 include:</p>
+
+        <ul>
+          <li><strong>Solid Cache, Solid Queue, and Solid Cable</strong> — database-backed adapters for caching, background jobs, and Action Cable. These let you replace Redis in many setups and simplify infrastructure.</li>
+          <li><strong>Kamal 2 integration</strong> — first-class deployment tooling baked into the <code>rails new</code> generator.</li>
+          <li><strong>Authentication generator</strong> — a minimal, secure-by-default auth scaffold (<code>rails generate authentication</code>).</li>
+          <li><strong>Propshaft as the default asset pipeline</strong> — Sprockets is still supported but Propshaft is the new default, which matters if you're generating a new app.</li>
+          <li><strong>Ruby 3.2+ requirement</strong> — Rails 8 requires Ruby 3.2 at minimum. If you're on Ruby 2.x or 3.0, you must upgrade Ruby first.</li>
+        </ul>
+
+        <p>For existing apps, the most impactful changes are the Ruby version requirement, some ActiveRecord and routing deprecations graduating to removals, and configuration defaults shifting.</p>
+
+        <h2>Before you start: prerequisites</h2>
+
+        <p>An upgrade attempted without a safety net is a gamble. Before you bump any version numbers:</p>
+
+        <ol>
+          <li><strong>Get your test suite passing.</strong> Run <code>bundle exec rspec</code> (or minitest) right now and fix any pre-existing failures. You cannot tell upgrade-caused breakage from pre-existing failures if your suite starts red.</li>
+          <li><strong>Check your Ruby version.</strong> Rails 8 requires Ruby 3.2+. If you're on an older Ruby, do the Ruby upgrade first, let it soak in production for a week, then proceed with Rails.</li>
+          <li><strong>Run <code>bundle outdated</code> and <code>bundle audit</code>.</strong> Note which gems have known issues. Some gems (especially older ones wrapping ActiveRecord or ActionController internals) will need updates or replacements.</li>
+          <li><strong>Review your config files with <code>rails app:update</code>.</strong> Run this on a branch and carefully review each diff. Don't blindly accept changes — understand what each one does. Use <a href="https://railsdiff.org" rel="noopener noreferrer">railsdiff.org</a> to compare your version to 8.0.</li>
+        </ol>
+
+        <h2>The upgrade sequence</h2>
+
+        <h3>1. Upgrade from Rails 7.0 to 7.1 first (if you haven't)</h3>
+
+        <p>Rails 8 deprecations were already announced in 7.1. If you're on 7.0, upgrading to 7.1 and fixing deprecation warnings before moving to 8.0 is dramatically easier than doing both jumps at once. Pay close attention to warnings in your logs during this step.</p>
+
+        <h3>2. Bump to Rails 8.0 in a dedicated branch</h3>
+
+        <pre><code># Gemfile
+gem "rails", "~> 8.0.0"</code></pre>
+
+        <p>Run <code>bundle update rails</code> and note every gem that can't resolve. This list tells you what needs attention first.</p>
+
+        <h3>3. Run <code>rails app:update</code></h3>
+
+        <p>This generates new initializers and updates config files to Rails 8 defaults. Review every change before accepting it. The three files that most commonly cause issues:</p>
+
+        <ul>
+          <li><code>config/application.rb</code> — new default config values may change behaviour</li>
+          <li><code>config/environments/production.rb</code> — defaults around caching and logging changed</li>
+          <li><code>config/initializers/new_framework_defaults_8_0.rb</code> — flip these flags one at a time, not all at once</li>
+        </ul>
+
+        <h3>4. Address the new framework defaults incrementally</h3>
+
+        <p>The generated <code>new_framework_defaults_8_0.rb</code> file has each new default commented out. Uncomment them one at a time, run your tests after each, and fix anything that breaks before moving to the next. This makes failures diagnosable instead of overwhelming.</p>
+
+        <h3>5. Handle ActiveRecord changes</h3>
+
+        <p>Several ActiveRecord query methods changed their behaviour in Rails 7.1 / 8.0. The most common issue: <code>where(attr: nil)</code> previously matched both <code>NULL</code> and missing records in some cases. Verify your most complex query chains are still producing correct SQL with <code>.to_sql</code>.</p>
+
+        <h3>6. Update your gems</h3>
+
+        <p>Run <code>bundle update</code> only after your app itself is on Rails 8. Update gems one at a time if possible, rather than all at once. Gems that frequently need attention during major Rails upgrades:</p>
+        <ul>
+          <li>Devise (or whatever auth library you use)</li>
+          <li>Kaminari / Pagy</li>
+          <li>Administrate / ActiveAdmin</li>
+          <li>Any gem using <code>ActiveRecord::Base</code> internals directly</li>
+        </ul>
+
+        <h2>The pitfalls most teams hit</h2>
+
+        <p><strong>Upgrading Ruby and Rails simultaneously.</strong> These are two separate upgrades with separate risk profiles. Do them in separate deploys with time between them to observe.</p>
+
+        <p><strong>Accepting all <code>rails app:update</code> diffs without reading them.</strong> The generated files are good defaults, but they can change behaviour your app depends on. One common example: changes to how <code>config.force_ssl</code> is set.</p>
+
+        <p><strong>Ignoring deprecation warnings.</strong> Deprecation warnings in Rails aren't cosmetic. They are advance notice that something will break in the next major version. If you ran Rails 7.1 and saw warnings, they became errors in 8.0.</p>
+
+        <p><strong>Not testing with production data volumes.</strong> Query behaviour changes can look fine with a small test database but perform completely differently at scale. Before promoting to production, run a performance test against a production-sized dataset.</p>
+
+        <h2>Rolling it out</h2>
+
+        <p>For a zero-drama production upgrade:</p>
+        <ol>
+          <li>Deploy to a staging environment that mirrors production as closely as possible.</li>
+          <li>Run your full test suite against staging.</li>
+          <li>Do a dark deploy to a single production server if your infrastructure supports it.</li>
+          <li>Monitor error rates and performance metrics for 24 hours before full rollout.</li>
+          <li>Keep the previous deploy ready to roll back to.</li>
+        </ol>
+
+        <p>The whole process — from starting the upgrade branch to a clean production deploy — takes most teams between one and three weeks, depending on the size of the codebase and how much test coverage exists. If it takes longer, something is blocking you that's worth investigating directly.</p>
+
+        <div class="post-cta">
+          <h3>Need help with your Rails upgrade?</h3>
+          <p>I've run dozens of framework upgrades across apps of all sizes. If you're planning a Rails 8 migration and want experienced hands on it, let's talk.</p>
+          <a href="/#contact" class="btn btn-primary">Get in touch</a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span class="footer-brand">© <span id="year"></span> Techualize</span>
+      <span class="footer-meta">Built with care · <a href="https://techualize.com">techualize.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

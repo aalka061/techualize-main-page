@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Practical articles on Ruby on Rails, AI agent development, app migrations, and building web & mobile products — by Techualize." />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Techualize" />
+  <meta name="theme-color" content="#070a12" />
+  <link rel="canonical" href="https://techualize.com/blog/" />
+  <meta property="og:title" content="Blog — Techualize" />
+  <meta property="og:description" content="Practical articles on Ruby on Rails, AI agents, app migrations, and modern web development." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://techualize.com/blog/" />
+  <meta property="og:image" content="https://techualize.com/assets/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Blog — Techualize" />
+  <meta name="twitter:description" content="Practical articles on Ruby on Rails, AI agents, app migrations, and modern web development." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <title>Blog — Techualize</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="/">Techualize</a>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="/#services">Services</a>
+        <a href="/#why">Why me</a>
+        <a href="/#process">Process</a>
+        <a href="/blog/" aria-current="page">Blog</a>
+        <a href="/#contact" class="nav-cta">Let's talk</a>
+      </nav>
+      <button type="button" class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main style="padding-top: var(--header-h);">
+    <section class="blog-hero">
+      <div class="container">
+        <p class="eyebrow">Insights &amp; guides</p>
+        <h1>The Techualize Blog</h1>
+        <p>Practical writing on Ruby on Rails, AI agents, migrations, and building software that lasts. No fluff — just things that actually help.</p>
+      </div>
+    </section>
+
+    <div class="container">
+      <div class="blog-grid">
+
+        <a class="blog-card" href="rescue-failing-rails-app.html">
+          <span class="blog-card-tag">Rails</span>
+          <h2>How to Rescue a Failing Ruby on Rails App</h2>
+          <p>Legacy Rails codebases don't have to be a nightmare. Here's a proven playbook for auditing, stabilising, and recovering brownfield Rails apps.</p>
+          <div class="blog-card-meta">
+            <span>April 2025 · 8 min read</span>
+            <span class="blog-card-read">Read →</span>
+          </div>
+        </a>
+
+        <a class="blog-card" href="rails-8-upgrade-guide.html">
+          <span class="blog-card-tag">Migrations</span>
+          <h2>Rails 7 to Rails 8: A Practical Upgrade Guide</h2>
+          <p>What actually changed in Rails 8, the steps to upgrade without breaking production, and the pitfalls most teams miss the first time.</p>
+          <div class="blog-card-meta">
+            <span>March 2025 · 9 min read</span>
+            <span class="blog-card-read">Read →</span>
+          </div>
+        </a>
+
+        <a class="blog-card" href="ai-agents-ruby-on-rails.html">
+          <span class="blog-card-tag">AI Agents</span>
+          <h2>Building Production-Ready AI Agents with Ruby on Rails</h2>
+          <p>LLM demos are easy. Reliable agents in production are not. A deep-dive on RAG, tool-use, observability, and failure modes.</p>
+          <div class="blog-card-meta">
+            <span>March 2025 · 10 min read</span>
+            <span class="blog-card-read">Read →</span>
+          </div>
+        </a>
+
+        <a class="blog-card" href="hire-rails-consultant.html">
+          <span class="blog-card-tag">Consulting</span>
+          <h2>When to Hire a Rails Consultant (and What to Look For)</h2>
+          <p>A full-time hire is not always the answer. How to decide when a Rails consultant makes more sense — and what separates good ones from the rest.</p>
+          <div class="blog-card-meta">
+            <span>February 2025 · 7 min read</span>
+            <span class="blog-card-read">Read →</span>
+          </div>
+        </a>
+
+        <a class="blog-card" href="zero-downtime-migrations-rails.html">
+          <span class="blog-card-tag">Database</span>
+          <h2>Zero-Downtime Database Migrations in Rails</h2>
+          <p>Schema changes should not wake you up at 3 am. The patterns and tools that keep your Rails app live during even the hairiest migrations.</p>
+          <div class="blog-card-meta">
+            <span>February 2025 · 8 min read</span>
+            <span class="blog-card-read">Read →</span>
+          </div>
+        </a>
+
+        <a class="blog-card" href="hotwire-vs-react-rails.html">
+          <span class="blog-card-tag">Frontend</span>
+          <h2>Hotwire vs React in Rails: How to Choose</h2>
+          <p>Both are valid. Neither is universally right. A clear decision framework for picking between Hotwire/Turbo and React in your Rails project.</p>
+          <div class="blog-card-meta">
+            <span>January 2025 · 7 min read</span>
+            <span class="blog-card-read">Read →</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span class="footer-brand">© <span id="year"></span> Techualize</span>
+      <span class="footer-meta">Built with care · <a href="https://techualize.com">techualize.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

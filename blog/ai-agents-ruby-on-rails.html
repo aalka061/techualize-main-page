@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="LLM demos are easy. Reliable AI agents in production are not. A deep-dive on RAG, tool-use, observability, and failure modes when building AI agents with Ruby on Rails." />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Techualize" />
+  <meta name="theme-color" content="#070a12" />
+  <link rel="canonical" href="https://techualize.com/blog/ai-agents-ruby-on-rails.html" />
+  <meta property="og:title" content="Building Production-Ready AI Agents with Ruby on Rails — Techualize" />
+  <meta property="og:description" content="LLM demos are easy. Reliable agents in production are not. RAG, tool-use, observability, and failure modes in Rails." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://techualize.com/blog/ai-agents-ruby-on-rails.html" />
+  <meta property="og:image" content="https://techualize.com/assets/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Building Production-Ready AI Agents with Ruby on Rails" />
+  <meta name="twitter:description" content="RAG, tool-use, observability, and failure modes when building AI agents in Rails." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <title>Building Production-Ready AI Agents with Ruby on Rails — Techualize</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Building Production-Ready AI Agents with Ruby on Rails",
+    "description": "RAG, tool-use, observability, and failure modes when building AI agents in Ruby on Rails.",
+    "author": { "@type": "Organization", "name": "Techualize", "url": "https://techualize.com" },
+    "publisher": { "@type": "Organization", "name": "Techualize", "url": "https://techualize.com" },
+    "datePublished": "2025-03-05",
+    "url": "https://techualize.com/blog/ai-agents-ruby-on-rails.html"
+  }
+  </script>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="/">Techualize</a>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="/#services">Services</a>
+        <a href="/#why">Why me</a>
+        <a href="/#process">Process</a>
+        <a href="/blog/">Blog</a>
+        <a href="/#contact" class="nav-cta">Let's talk</a>
+      </nav>
+      <button type="button" class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main style="padding-top: var(--header-h);">
+    <div class="container">
+      <div class="post-header">
+        <a class="back-link" href="/blog/">← All posts</a>
+        <span class="post-tag">AI Agents</span>
+        <h1>Building Production-Ready AI Agents with Ruby on Rails</h1>
+        <p class="post-lead">LLM demos are easy. Reliable agents that handle real users, real edge cases, and real failure modes are a different problem entirely.</p>
+        <div class="post-meta">
+          <span>March 2025</span>
+          <span>10 min read</span>
+          <span>By Techualize</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-body">
+      <article class="prose">
+
+        <p>There's a wide gap between "I got a chatbot working in a Jupyter notebook" and "I have an AI agent reliably serving thousands of requests a day in production." Rails actually bridges that gap better than most frameworks, because the hard parts of production AI agents — persistence, job queues, structured data, observability — are exactly what Rails was built for.</p>
+
+        <p>This post is about the production side. Specifically: how to architect AI agent systems in Rails that hold up under real conditions.</p>
+
+        <h2>What "production-ready" actually means for an AI agent</h2>
+
+        <p>A production AI agent needs to be:</p>
+
+        <ul>
+          <li><strong>Observable</strong> — you can see what it did, what the LLM said, what tools it called, and where it went wrong.</li>
+          <li><strong>Recoverable</strong> — when it fails (and it will), the failure is bounded, logged, and recoverable without manual intervention.</li>
+          <li><strong>Deterministic enough</strong> — the same input should produce acceptably consistent results. Pure non-determinism is fine in a demo, catastrophic in a billing workflow.</li>
+          <li><strong>Cost-controlled</strong> — LLM API calls are not free. Unbounded token usage in a production loop will produce a surprise invoice.</li>
+          <li><strong>Grounded in your domain</strong> — the agent knows things about your app's data and rules, not just general world knowledge.</li>
+        </ul>
+
+        <h2>Structuring an agent in Rails</h2>
+
+        <p>The most pragmatic structure I've found for Rails AI agents is a three-layer model:</p>
+
+        <ol>
+          <li><strong>The Agent class</strong> — orchestrates the reasoning loop (prompt → LLM → tool call → result → repeat)</li>
+          <li><strong>Tool classes</strong> — each represents one capability (search the database, send an email, call an external API)</li>
+          <li><strong>A persisted session model</strong> — stores the full conversation history, tool calls, and outcomes</li>
+        </ol>
+
+        <p>Persisting the session is non-negotiable. It's how you debug failures, replay requests, audit behaviour, and eventually fine-tune if you need to.</p>
+
+        <pre><code># A minimal agent session model
+class AgentSession &lt; ApplicationRecord
+  # columns: status, messages (jsonb), metadata (jsonb), user_id
+  enum status: { pending: 0, running: 1, completed: 2, failed: 3 }
+  belongs_to :user, optional: true
+
+  def messages
+    super || []
+  end
+
+  def add_message(role:, content:)
+    update!(messages: messages + [{ role: role, content: content, at: Time.current }])
+  end
+end</code></pre>
+
+        <h2>Retrieval-Augmented Generation (RAG) in Rails</h2>
+
+        <p>Most useful agents need to reason over your app's data, not just general knowledge. RAG is how you do that: you store embeddings of your documents (or structured records) and retrieve the relevant ones before sending the LLM prompt.</p>
+
+        <p>The Rails-idiomatic approach uses <code>pgvector</code> (the PostgreSQL extension) via the <code>neighbor</code> gem, which keeps your vectors inside the same database you're already using:</p>
+
+        <pre><code># Migration
+class AddEmbeddingToDocuments &lt; ActiveRecord::Migration[8.0]
+  def change
+    add_column :documents, :embedding, :vector, limit: 1536
+    add_index :documents, :embedding, using: :ivfflat,
+              opclass: :vector_cosine_ops
+  end
+end
+
+# Model
+class Document &lt; ApplicationRecord
+  has_neighbors :embedding
+
+  def self.search(query_embedding, limit: 5)
+    nearest_neighbors(:embedding, query_embedding, distance: "cosine").first(limit)
+  end
+end</code></pre>
+
+        <p>Generate embeddings on write (in a background job, not inline with the request), and search on read. Keep the embedding generation in a service object so you can swap providers without touching model code.</p>
+
+        <h2>Tool use: keeping tools narrow and typed</h2>
+
+        <p>Every tool your agent can call should do exactly one thing, have a clear input schema, and return a structured result. Broad, multi-purpose tools are harder to test, harder to prompt around, and harder to audit.</p>
+
+        <pre><code>class Tools::SearchOrders
+  DESCRIPTION = "Search a customer's order history by status or date range."
+
+  SCHEMA = {
+    type: "object",
+    properties: {
+      customer_id: { type: "integer", description: "The customer's ID" },
+      status: { type: "string", enum: ["pending", "shipped", "delivered", "cancelled"] },
+      since: { type: "string", description: "ISO 8601 date, e.g. 2024-01-01" }
+    },
+    required: ["customer_id"]
+  }.freeze
+
+  def call(customer_id:, status: nil, since: nil)
+    scope = Order.where(customer_id: customer_id)
+    scope = scope.where(status: status) if status
+    scope = scope.where("created_at >= ?", Date.parse(since)) if since
+    scope.limit(20).map { |o| { id: o.id, status: o.status, total: o.total_cents } }
+  rescue ArgumentError
+    { error: "Invalid date format for 'since'" }
+  end
+end</code></pre>
+
+        <p>Note the structured return value and explicit error handling. The agent loop should be able to receive a tool error, pass it back to the LLM, and let the model try again — which only works if errors are machine-readable, not Ruby exceptions.</p>
+
+        <h2>The agent loop: avoiding runaway execution</h2>
+
+        <p>The simplest failure mode of an AI agent is an infinite loop. The model calls a tool, gets a result, decides to call another tool, and so on forever. You need hard limits:</p>
+
+        <pre><code>MAX_ITERATIONS = 10
+
+def run(initial_message)
+  session.add_message(role: "user", content: initial_message)
+
+  MAX_ITERATIONS.times do
+    response = llm_client.complete(messages: session.messages, tools: tool_schemas)
+    session.add_message(role: "assistant", content: response.content)
+
+    break if response.finish_reason == "end_turn"
+
+    if response.tool_calls.any?
+      response.tool_calls.each do |tool_call|
+        result = dispatch_tool(tool_call)
+        session.add_message(role: "tool", content: result.to_json, tool_use_id: tool_call.id)
+      end
+    else
+      break
+    end
+  end
+
+  session.update!(status: :completed)
+rescue => e
+  session.update!(status: :failed, metadata: session.metadata.merge(error: e.message))
+  raise
+end</code></pre>
+
+        <h2>Running agents in background jobs</h2>
+
+        <p>Never run an agent synchronously in a web request. LLM API calls are slow and can time out. Use Sidekiq (or Solid Queue in Rails 8) to run the agent asynchronously, and use Action Cable or polling to stream results back to the client:</p>
+
+        <pre><code>class AgentJob &lt; ApplicationJob
+  queue_as :agents
+
+  def perform(session_id)
+    session = AgentSession.find(session_id)
+    AgentRunner.new(session).run(session.messages.last["content"])
+  ensure
+    ActionCable.server.broadcast("agent_session_#{session_id}", {
+      status: session.reload.status,
+      messages: session.messages
+    })
+  end
+end</code></pre>
+
+        <h2>Observability: log everything</h2>
+
+        <p>LLM calls are a black box. Your application logs are the only visibility you have into what the model said, what it decided, and why a particular response was wrong. Log:</p>
+
+        <ul>
+          <li>Every prompt sent to the LLM (model, temperature, token count)</li>
+          <li>Every response received (finish reason, token usage, latency)</li>
+          <li>Every tool call and its result</li>
+          <li>The final outcome and any errors</li>
+        </ul>
+
+        <p>Token usage logging is especially important for cost control. A single runaway agent that hits MAX_ITERATIONS ten times on a high-traffic endpoint can generate a meaningful API bill in hours.</p>
+
+        <div class="post-cta">
+          <h3>Want AI agents built for your Rails app?</h3>
+          <p>I build custom agents, RAG pipelines, and LLM integrations that are production-grade from day one — observable, recoverable, and grounded in your domain. Let's talk about what you're building.</p>
+          <a href="/#contact" class="btn btn-primary">Get in touch</a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span class="footer-brand">© <span id="year"></span> Techualize</span>
+      <span class="footer-meta">Built with care · <a href="https://techualize.com">techualize.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

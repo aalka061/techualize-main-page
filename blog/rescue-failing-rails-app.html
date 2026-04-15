@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Legacy Rails codebases don't have to be a nightmare. A proven playbook for auditing, stabilising, and recovering brownfield Ruby on Rails applications." />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Techualize" />
+  <meta name="theme-color" content="#070a12" />
+  <link rel="canonical" href="https://techualize.com/blog/rescue-failing-rails-app.html" />
+  <meta property="og:title" content="How to Rescue a Failing Ruby on Rails App — Techualize" />
+  <meta property="og:description" content="Legacy Rails codebases don't have to be a nightmare. A proven playbook for auditing, stabilising, and recovering brownfield Rails applications." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://techualize.com/blog/rescue-failing-rails-app.html" />
+  <meta property="og:image" content="https://techualize.com/assets/og-image.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="How to Rescue a Failing Ruby on Rails App" />
+  <meta name="twitter:description" content="A proven playbook for auditing, stabilising, and recovering brownfield Rails applications." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <title>How to Rescue a Failing Ruby on Rails App — Techualize</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Rescue a Failing Ruby on Rails App",
+    "description": "A proven playbook for auditing, stabilising, and recovering brownfield Ruby on Rails applications.",
+    "author": { "@type": "Organization", "name": "Techualize", "url": "https://techualize.com" },
+    "publisher": { "@type": "Organization", "name": "Techualize", "url": "https://techualize.com" },
+    "datePublished": "2025-04-01",
+    "url": "https://techualize.com/blog/rescue-failing-rails-app.html"
+  }
+  </script>
+</head>
+<body>
+  <div class="noise" aria-hidden="true"></div>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="/">Techualize</a>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="/#services">Services</a>
+        <a href="/#why">Why me</a>
+        <a href="/#process">Process</a>
+        <a href="/blog/">Blog</a>
+        <a href="/#contact" class="nav-cta">Let's talk</a>
+      </nav>
+      <button type="button" class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <main style="padding-top: var(--header-h);">
+    <div class="container">
+      <div class="post-header">
+        <a class="back-link" href="/blog/">← All posts</a>
+        <span class="post-tag">Rails</span>
+        <h1>How to Rescue a Failing Ruby on Rails App</h1>
+        <p class="post-lead">Legacy codebases don't have to stay broken. Here's the playbook I use to audit, stabilise, and breathe new life into brownfield Rails apps.</p>
+        <div class="post-meta">
+          <span>April 2025</span>
+          <span>8 min read</span>
+          <span>By Techualize</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="post-body">
+      <article class="prose">
+
+        <p>Every team inherits a codebase they didn't build. Sometimes that codebase is fine. Sometimes it's a Rails app from 2014 running on Ruby 2.4, with no test coverage, N+1 queries everywhere, and a deployment process that involves SSH-ing into production and running <code>git pull</code>. I've seen both.</p>
+
+        <p>If you're reading this, you're probably dealing with the second kind. The good news: Rails apps are remarkably rescuable. The framework's conventions mean there's usually structure to work with — it's just buried under years of accumulated shortcuts. This is the process I follow.</p>
+
+        <h2>Step 1: Establish a safety baseline before touching anything</h2>
+
+        <p>The single most dangerous thing you can do with a legacy codebase is start refactoring it without tests. You don't know what's load-bearing. You'll break things and not know it until a customer complains.</p>
+
+        <p>Before writing a single line of new code, your first job is to add a test harness around the system's most critical paths — even if those tests are ugly, slow integration tests. They exist to catch regressions, not to be elegant.</p>
+
+        <p>Start by identifying the app's revenue-critical flows. Login. Checkout. The API endpoints your mobile app calls. Write high-level request specs for these. You don't need to cover edge cases yet — you just need a smoke test that tells you "did I break the thing that makes money?"</p>
+
+        <pre><code># A rough integration test is infinitely better than none
+RSpec.describe "Checkout flow" do
+  it "allows a logged-in user to complete a purchase" do
+    user = create(:user)
+    product = create(:product, price: 49_99)
+
+    sign_in user
+    post "/cart", params: { product_id: product.id }
+    post "/orders"
+
+    expect(response).to redirect_to(order_confirmation_path)
+    expect(Order.last.user).to eq(user)
+  end
+end</code></pre>
+
+        <p>It's rough. It doesn't test every edge case. But it'll catch the worst regressions and give you confidence to move.</p>
+
+        <h2>Step 2: Run a proper audit — data, not gut feel</h2>
+
+        <p>Once you have basic safety coverage, run a structured audit before forming an opinion. Gut feel is not a plan.</p>
+
+        <p>What to audit:</p>
+
+        <ul>
+          <li><strong>Ruby and Rails versions</strong> — Are they EOL? Are they on a supported release? Check <code>ruby -v</code> and <code>bundle exec rails -v</code> against the official support matrix.</li>
+          <li><strong>Gem dependencies</strong> — Run <code>bundle outdated</code>. Pay special attention to gems with known CVEs. <code>bundle audit</code> from the <code>bundler-audit</code> gem is your friend here.</li>
+          <li><strong>N+1 queries</strong> — Add the <code>bullet</code> gem to development and run through the main flows. You'll almost certainly find queries inside loops that should be <code>includes</code> or <code>preload</code>.</li>
+          <li><strong>Database indexes</strong> — Run <code>lol_dba</code> or manually check that every foreign key and common <code>WHERE</code> column has an index. Missing indexes are one of the fastest performance wins in any Rails app.</li>
+          <li><strong>Test coverage</strong> — Even a rough SimpleCov report tells you where the risk is. 10% coverage isn't great, but knowing which 10% it is matters.</li>
+          <li><strong>Code quality signals</strong> — <code>rubocop</code> with a relaxed config gives you a heat map of complexity. High cyclomatic complexity in a model that also handles billing is a red flag.</li>
+        </ul>
+
+        <p>Document what you find. This becomes your rescue roadmap and your communication tool with whoever is funding the work.</p>
+
+        <h2>Step 3: Fix the infrastructure before the code</h2>
+
+        <p>Application-level problems are usually symptoms of missing operational foundations. Before fixing code, fix the platform:</p>
+
+        <ul>
+          <li><strong>Get proper error tracking in place.</strong> Sentry, Honeybadger, or Bugsnag — pick one and wire it up. You cannot fix what you cannot see.</li>
+          <li><strong>Add performance monitoring.</strong> Even a free New Relic or Scout APM tier will surface the slowest endpoints and background jobs. The 80/20 rule almost always holds: 20% of your endpoints cause 80% of the pain.</li>
+          <li><strong>Automate deploys.</strong> If deployment is a manual process, it's also a risky process. Get to a point where merging to main triggers a deploy. CI/CD removes human error from the chain and makes frequent, small deploys possible.</li>
+          <li><strong>Review database backups.</strong> Ask when the last restore test was done. In many teams the answer is "never." Verify that backups actually work before you start major migrations.</li>
+        </ul>
+
+        <p>These aren't glamorous. They won't show up in a demo. But they're what separates teams that fix things once from teams that fix the same things over and over.</p>
+
+        <h2>Step 4: Prioritise by impact, not by annoyance</h2>
+
+        <p>By now you have a list of problems. The temptation is to start with the thing that irritates you most — the massive <code>ApplicationController</code>, the 2000-line model, the god service object. Resist it.</p>
+
+        <p>Prioritise by answer to this question: <em>What is currently hurting users or the business?</em></p>
+
+        <p>A slow checkout page costs money every day. A poorly named variable costs nothing. Fix the first kind first.</p>
+
+        <p>A practical triage framework:</p>
+        <ol>
+          <li><strong>P0 — User-visible bugs</strong> in core flows. Fix these immediately.</li>
+          <li><strong>P1 — Performance problems</strong> causing measurable drop-off. Fix within the first sprint.</li>
+          <li><strong>P2 — Security vulnerabilities</strong> (outdated gems with CVEs, unescaped inputs). Fix before the next release.</li>
+          <li><strong>P3 — Technical debt</strong> that slows down future development. Fix incrementally, alongside feature work.</li>
+        </ol>
+
+        <h2>Step 5: Upgrade Rails and Ruby incrementally</h2>
+
+        <p>Version upgrades on a legacy Rails app are one of the most misunderstood tasks in the industry. Teams either avoid them entirely (and fall years behind) or try to do them all at once (and break everything).</p>
+
+        <p>The right approach: <strong>one major version at a time, with tests at each step.</strong></p>
+
+        <p>If you're on Rails 5.2 and want to reach Rails 7.1, you don't jump directly. You go 5.2 → 6.0 → 6.1 → 7.0 → 7.1. At each step you run your test suite, fix what breaks, and only move forward once the suite is green. This keeps the change set small and diagnosable.</p>
+
+        <p>Use the <code>railsdiff.org</code> tool to see exactly what changed in configuration files between versions. Missing a config change in <code>application.rb</code> is one of the most common sources of subtle bugs during upgrades.</p>
+
+        <h2>When to bring in outside help</h2>
+
+        <p>Some rescues are well within the capacity of the existing team, once they have a plan. Others aren't — either because the team is too close to the codebase, too stretched to context-switch, or because they've never done a major Rails version upgrade before.</p>
+
+        <p>Signs you might benefit from a specialist:</p>
+        <ul>
+          <li>The last Rails upgrade stalled mid-way and was quietly abandoned</li>
+          <li>The team is spending more time firefighting than building</li>
+          <li>There's institutional fear around touching certain parts of the codebase</li>
+          <li>The app is on an EOL Ruby or Rails version and the team doesn't have a clear path forward</li>
+        </ul>
+
+        <p>A good Rails consultant doesn't just fix the symptoms — they leave the team with a codebase they understand and trust.</p>
+
+        <div class="post-cta">
+          <h3>Dealing with a struggling Rails app?</h3>
+          <p>I specialise in Rails rescues, audits, and version upgrades. Tell me where things stand and I'll give you an honest assessment of what it'll take to get healthy.</p>
+          <a href="/#contact" class="btn btn-primary">Get in touch</a>
+        </div>
+
+      </article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span class="footer-brand">© <span id="year"></span> Techualize</span>
+      <span class="footer-meta">Built with care · <a href="https://techualize.com">techualize.com</a></span>
+    </div>
+  </footer>
+
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>
