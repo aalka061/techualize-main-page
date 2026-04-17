@@ -1,330 +1,436 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Techualize — Ruby on Rails consultancy, migrations, AI agents, and modern web & mobile development. A decade of shipping with clarity and speed." />
-  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
-  <meta name="googlebot" content="index, follow" />
-  <meta name="author" content="Techualize" />
-  <meta name="theme-color" content="#070a12" />
-  <link rel="canonical" href="https://techualize.com/" />
-  <link rel="alternate" hreflang="en" href="https://techualize.com/" />
-  <link rel="alternate" hreflang="x-default" href="https://techualize.com/" />
-  <meta property="og:title" content="Techualize — Rails expertise. Products that ship." />
-  <meta property="og:description" content="10+ years Ruby on Rails: consultancy, migrations, AI agents, web & mobile apps, and static sites. Freelance, remote, worldwide." />
-  <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://techualize.com/" />
-  <meta property="og:site_name" content="Techualize" />
-  <meta property="og:locale" content="en_US" />
-  <meta property="og:image" content="https://techualize.com/assets/og-image.png" />
-  <meta property="og:image:width" content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Techualize — Ruby on Rails, AI agents, web and mobile development" />
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Techualize — Rails expertise. Products that ship." />
-  <meta name="twitter:description" content="10+ years Ruby on Rails: consultancy, migrations, AI agents, web & mobile apps, and static sites. Freelance, remote, worldwide." />
-  <meta name="twitter:image" content="https://techualize.com/assets/og-image.png" />
-  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
-  <title>Techualize — Rails expertise. Products that ship.</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="assets/css/main.css" />
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@graph": [
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Techualize — Ruby on Rails consultancy, migrations, AI agents, and modern web & mobile development. A decade of shipping with clarity and speed."
+    />
+    <meta
+      name="robots"
+      content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"
+    />
+    <meta name="googlebot" content="index, follow" />
+    <meta name="author" content="Techualize" />
+    <meta name="theme-color" content="#070a12" />
+    <link rel="canonical" href="https://techualize.com/" />
+    <link rel="alternate" hreflang="en" href="https://techualize.com/" />
+    <link rel="alternate" hreflang="x-default" href="https://techualize.com/" />
+    <meta
+      property="og:title"
+      content="Techualize — Rails expertise. Products that ship."
+    />
+    <meta
+      property="og:description"
+      content="10+ years Ruby on Rails: consultancy, migrations, AI agents, web & mobile apps, and static sites. Freelance, remote, worldwide."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://techualize.com/" />
+    <meta property="og:site_name" content="Techualize" />
+    <meta property="og:locale" content="en_US" />
+    <meta
+      property="og:image"
+      content="https://techualize.com/assets/og-image.png"
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Techualize — Ruby on Rails, AI agents, web and mobile development"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="Techualize — Rails expertise. Products that ship."
+    />
+    <meta
+      name="twitter:description"
+      content="10+ years Ruby on Rails: consultancy, migrations, AI agents, web & mobile apps, and static sites. Freelance, remote, worldwide."
+    />
+    <meta
+      name="twitter:image"
+      content="https://techualize.com/assets/og-image.png"
+    />
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+    <title>Techualize — Rails expertise. Products that ship.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <script type="application/ld+json">
       {
-        "@type": "WebSite",
-        "@id": "https://techualize.com/#website",
-        "url": "https://techualize.com/",
-        "name": "Techualize",
-        "description": "Ruby on Rails consultancy, migrations, AI agents, and modern web and mobile development. Freelance, remote, worldwide.",
-        "inLanguage": "en-US",
-        "publisher": { "@id": "https://techualize.com/#organization" }
-      },
-      {
-        "@type": "Organization",
-        "@id": "https://techualize.com/#organization",
-        "name": "Techualize",
-        "url": "https://techualize.com/",
-        "email": "hello@techualize.com",
-        "description": "Independent software consultancy specializing in Ruby on Rails, AI agents, migrations, and web and mobile product delivery.",
-        "areaServed": { "@type": "Place", "name": "Worldwide" }
-      },
-      {
-        "@type": "ProfessionalService",
-        "@id": "https://techualize.com/#professional-service",
-        "name": "Techualize",
-        "url": "https://techualize.com/",
-        "image": "https://techualize.com/assets/og-image.png",
-        "description": "Ruby on Rails consulting, application migrations and upgrades, AI agents and automation, full-stack web and mobile apps, and static marketing sites.",
-        "provider": { "@id": "https://techualize.com/#organization" },
-        "areaServed": { "@type": "Place", "name": "Worldwide" },
-        "serviceType": [
-          "Ruby on Rails consulting",
-          "Application migration",
-          "AI agent development",
-          "Web application development",
-          "Mobile application development",
-          "Static website development"
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebSite",
+            "@id": "https://techualize.com/#website",
+            "url": "https://techualize.com/",
+            "name": "Techualize",
+            "description": "Ruby on Rails consultancy, migrations, AI agents, and modern web and mobile development. Freelance, remote, worldwide.",
+            "inLanguage": "en-US",
+            "publisher": { "@id": "https://techualize.com/#organization" }
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://techualize.com/#organization",
+            "name": "Techualize",
+            "url": "https://techualize.com/",
+            "email": "techualize@gmail.com",
+            "description": "Independent software consultancy specializing in Ruby on Rails, AI agents, migrations, and web and mobile product delivery.",
+            "areaServed": { "@type": "Place", "name": "Worldwide" }
+          },
+          {
+            "@type": "ProfessionalService",
+            "@id": "https://techualize.com/#professional-service",
+            "name": "Techualize",
+            "url": "https://techualize.com/",
+            "image": "https://techualize.com/assets/og-image.png",
+            "description": "Ruby on Rails consulting, application migrations and upgrades, AI agents and automation, full-stack web and mobile apps, and static marketing sites.",
+            "provider": { "@id": "https://techualize.com/#organization" },
+            "areaServed": { "@type": "Place", "name": "Worldwide" },
+            "serviceType": [
+              "Ruby on Rails consulting",
+              "Application migration",
+              "AI agent development",
+              "Web application development",
+              "Mobile application development",
+              "Static website development"
+            ]
+          }
         ]
       }
-    ]
-  }
-  </script>
-</head>
-<body>
-  <div class="noise" aria-hidden="true"></div>
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="logo" href="#top">Techualize</a>
-      <nav class="nav" id="nav" aria-label="Primary">
-        <a href="#services">Services</a>
-        <a href="#why">Why me</a>
-        <a href="#process">Process</a>
-        <a href="blog/">Blog</a>
-        <a href="#contact" class="nav-cta">Let’s talk</a>
-      </nav>
-      <button type="button" class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="nav" aria-label="Open menu">
-        <span></span><span></span>
-      </button>
-    </div>
-  </header>
+    </script>
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="logo" href="#top">Techualize</a>
+        <nav class="nav" id="nav" aria-label="Primary">
+          <a href="#services">Services</a>
+          <a href="#why">Why me</a>
+          <a href="#process">Process</a>
+          <a href="blog/">Blog</a>
+          <a href="#contact" class="nav-cta">Let’s talk</a>
+        </nav>
+        <button
+          type="button"
+          class="menu-toggle"
+          id="menuToggle"
+          aria-expanded="false"
+          aria-controls="nav"
+          aria-label="Open menu"
+        >
+          <span></span><span></span>
+        </button>
+      </div>
+    </header>
 
-  <main id="top">
-    <section class="hero">
-      <div class="container hero-grid">
-        <div class="hero-copy">
-          <p class="eyebrow">Independent · Remote · Worldwide</p>
-          <h1 class="hero-title">
-            Rails depth.<br />
-            <em>Delivery</em> you can trust.
-          </h1>
-          <p class="hero-lead">
-            I’m a freelancer with <strong>10 years</strong> building and rescuing Ruby on Rails apps.
-            From audits and migrations to <strong>AI agents</strong>, full web and mobile builds — shipped on time, with the calm you’re looking for.
-          </p>
-          <div class="hero-actions">
-            <a href="#contact" class="btn btn-primary">Start a project</a>
-            <a href="#services" class="btn btn-ghost">Explore services</a>
+    <main id="top">
+      <section class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Independent · Remote · Worldwide</p>
+            <h1 class="hero-title">
+              Rails depth.<br />
+              <em>Delivery</em> you can trust.
+            </h1>
+            <p class="hero-lead">
+              I’m a freelancer with <strong>10 years</strong> building and
+              rescuing Ruby on Rails apps. From audits and migrations to
+              <strong>AI agents</strong>, full web and mobile builds — shipped
+              on time, with the calm you’re looking for.
+            </p>
+            <div class="hero-actions">
+              <a href="#contact" class="btn btn-primary">Start a project</a>
+              <a href="#services" class="btn btn-ghost">Explore services</a>
+            </div>
+            <dl class="hero-stats">
+              <div>
+                <dt>Experience</dt>
+                <dd>10+ yrs RoR</dd>
+              </div>
+              <div>
+                <dt>Focus</dt>
+                <dd>Rails · AI agents · Web & mobile</dd>
+              </div>
+              <div>
+                <dt>Style</dt>
+                <dd>Clear · Fast · Reliable</dd>
+              </div>
+            </dl>
           </div>
-          <dl class="hero-stats">
-            <div>
-              <dt>Experience</dt>
-              <dd>10+ yrs RoR</dd>
-            </div>
-            <div>
-              <dt>Focus</dt>
-              <dd>Rails · AI agents · Web & mobile</dd>
-            </div>
-            <div>
-              <dt>Style</dt>
-              <dd>Clear · Fast · Reliable</dd>
-            </div>
-          </dl>
-        </div>
-        <div class="hero-visual" aria-hidden="true">
-          <div class="orb orb-a"></div>
-          <div class="orb orb-b"></div>
-          <div class="card-stack">
-            <div class="glass-card">
-              <span class="pill">Consult</span>
-              <p>Architecture, performance, legacy rescue</p>
-            </div>
-            <div class="glass-card">
-              <span class="pill pill-alt">Ship</span>
-              <p>Web, mobile, static sites — done right</p>
-            </div>
-            <div class="glass-card">
-              <span class="pill">AI</span>
-              <p>Agents, workflows, and LLM integrations — production-ready</p>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="orb orb-a"></div>
+            <div class="orb orb-b"></div>
+            <div class="card-stack">
+              <div class="glass-card">
+                <span class="pill">Consult</span>
+                <p>Architecture, performance, legacy rescue</p>
+              </div>
+              <div class="glass-card">
+                <span class="pill pill-alt">Ship</span>
+                <p>Web, mobile, static sites — done right</p>
+              </div>
+              <div class="glass-card">
+                <span class="pill">AI</span>
+                <p>
+                  Agents, workflows, and LLM integrations — production-ready
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section class="section logos" aria-label="Capabilities">
-      <div class="container logos-inner">
-        <span class="logos-label">What I work with</span>
-        <ul class="logo-row">
-          <li>Ruby on Rails</li>
-          <li>PostgreSQL</li>
-          <li>Sidekiq · Redis</li>
-          <li>Hotwire · Stimulus</li>
-          <li>REST &amp; GraphQL</li>
-          <li>React · Native</li>
-          <li>AI agents · LLM APIs</li>
-        </ul>
-      </div>
-    </section>
-
-    <section id="services" class="section services">
-      <div class="container">
-        <header class="section-head">
-          <h2>Services</h2>
-          <p>Focused offerings — so you know exactly what you’re buying.</p>
-        </header>
-        <div class="service-grid">
-          <article class="service-card">
-            <div class="service-icon" aria-hidden="true">◆</div>
-            <h3>Ruby on Rails consultancy</h3>
-            <p>
-              Code reviews, architecture decisions, performance tuning, security hardening,
-              and hands-on help on any Rails codebase — greenfield or brownfield.
-            </p>
-          </article>
-          <article class="service-card">
-            <div class="service-icon" aria-hidden="true">↻</div>
-            <h3>Migrations &amp; upgrades</h3>
-            <p>
-              Framework upgrades, database moves, cloud transitions, and “we need this on the new stack”
-              projects — planned, tested, and executed without drama.
-            </p>
-          </article>
-          <article class="service-card">
-            <div class="service-icon" aria-hidden="true">◇</div>
-            <h3>Web &amp; mobile apps</h3>
-            <p>
-              End-to-end product development: APIs, admin tools, customer-facing web,
-              and mobile experiences — delivered in a timeline we agree on, with room to breathe.
-            </p>
-          </article>
-          <article class="service-card">
-            <div class="service-icon" aria-hidden="true">✦</div>
-            <h3>AI agents &amp; automation</h3>
-            <p>
-              Custom agents, RAG-style knowledge workflows, tool use, and integrations with your Rails stack
-              or standalone services — designed for reliability, observability, and real users.
-            </p>
-          </article>
-          <article class="service-card">
-            <div class="service-icon" aria-hidden="true">▢</div>
-            <h3>Static &amp; marketing sites</h3>
-            <p>
-              Fast, modern landing pages and company sites for teams and individuals who want
-              polish without maintaining a heavy CMS.
-            </p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="why" class="section why">
-      <div class="container why-grid">
-        <div class="why-copy">
-          <h2>Why teams choose me</h2>
-          <p class="why-intro">
-            Freelance doesn’t mean flaky. It means direct access, no layers, and ownership from day one.
-          </p>
-          <ul class="why-list">
-            <li>
-              <strong>A decade in Rails</strong> — patterns, pitfalls, and pragmatism, not tutorial code.
-            </li>
-            <li>
-              <strong>Peace of mind</strong> — realistic estimates, clear communication, and predictable delivery.
-            </li>
-            <li>
-              <strong>Speed with care</strong> — shipping fast without cutting the corners that hurt you later.
-            </li>
-            <li>
-              <strong>AI that fits production</strong> — agents and LLM features grounded in your domain, not brittle demos.
-            </li>
+      <section class="section logos" aria-label="Capabilities">
+        <div class="container logos-inner">
+          <span class="logos-label">What I work with</span>
+          <ul class="logo-row">
+            <li>Ruby on Rails</li>
+            <li>PostgreSQL</li>
+            <li>Sidekiq · Redis</li>
+            <li>Hotwire · Stimulus</li>
+            <li>REST &amp; GraphQL</li>
+            <li>React · Native</li>
+            <li>AI agents · LLM APIs</li>
           </ul>
         </div>
-        <aside class="why-aside">
-          <blockquote class="quote">
-            <p>“I want visitors to feel the site before they read a line — then stay for the substance.”</p>
-            <footer>— The bar I hold for every engagement</footer>
-          </blockquote>
-        </aside>
-      </div>
-    </section>
+      </section>
 
-    <section id="process" class="section process">
-      <div class="container">
-        <header class="section-head">
-          <h2>How we work together</h2>
-          <p>A simple rhythm so projects stay aligned.</p>
-        </header>
-        <ol class="process-steps">
-          <li>
-            <span class="step-num">01</span>
-            <h3>Discovery</h3>
-            <p>Goals, constraints, and success criteria — aligned before a single line of code.</p>
-          </li>
-          <li>
-            <span class="step-num">02</span>
-            <h3>Proposal</h3>
-            <p>Scope, milestones, and a clear path — no vague “we’ll figure it out later.”</p>
-          </li>
-          <li>
-            <span class="step-num">03</span>
-            <h3>Build &amp; ship</h3>
-            <p>Iterative delivery with demos, feedback loops, and documentation that lasts.</p>
-          </li>
-          <li>
-            <span class="step-num">04</span>
-            <h3>Handoff</h3>
-            <p>Your team can run with it — or I stay on for ongoing support if you need it.</p>
-          </li>
-        </ol>
-      </div>
-    </section>
-
-    <section class="section cta-band">
-      <div class="container cta-inner">
-        <div>
-          <h2>Rails rescue, AI agents, or a full product?</h2>
-          <p>Tell me about your timeline and stack — I’ll reply with honest next steps.</p>
+      <section id="services" class="section services">
+        <div class="container">
+          <header class="section-head">
+            <h2>Services</h2>
+            <p>Focused offerings — so you know exactly what you’re buying.</p>
+          </header>
+          <div class="service-grid">
+            <article class="service-card">
+              <div class="service-icon" aria-hidden="true">◆</div>
+              <h3>Ruby on Rails consultancy</h3>
+              <p>
+                Code reviews, architecture decisions, performance tuning,
+                security hardening, and hands-on help on any Rails codebase —
+                greenfield or brownfield.
+              </p>
+            </article>
+            <article class="service-card">
+              <div class="service-icon" aria-hidden="true">↻</div>
+              <h3>Migrations &amp; upgrades</h3>
+              <p>
+                Framework upgrades, database moves, cloud transitions, and “we
+                need this on the new stack” projects — planned, tested, and
+                executed without drama.
+              </p>
+            </article>
+            <article class="service-card">
+              <div class="service-icon" aria-hidden="true">◇</div>
+              <h3>Web &amp; mobile apps</h3>
+              <p>
+                End-to-end product development: APIs, admin tools,
+                customer-facing web, and mobile experiences — delivered in a
+                timeline we agree on, with room to breathe.
+              </p>
+            </article>
+            <article class="service-card">
+              <div class="service-icon" aria-hidden="true">✦</div>
+              <h3>AI agents &amp; automation</h3>
+              <p>
+                Custom agents, RAG-style knowledge workflows, tool use, and
+                integrations with your Rails stack or standalone services —
+                designed for reliability, observability, and real users.
+              </p>
+            </article>
+            <article class="service-card">
+              <div class="service-icon" aria-hidden="true">▢</div>
+              <h3>Static &amp; marketing sites</h3>
+              <p>
+                Fast, modern landing pages and company sites for teams and
+                individuals who want polish without maintaining a heavy CMS.
+              </p>
+            </article>
+          </div>
         </div>
-        <a href="#contact" class="btn btn-primary btn-lg">Get in touch</a>
-      </div>
-    </section>
+      </section>
 
-    <section id="contact" class="section contact">
-      <div class="container contact-grid">
-        <div>
-          <h2>Contact</h2>
-          <p class="contact-lead">
-            Ready when you are. Share a bit about your project and I’ll get back to you shortly.
-          </p>
-          <address class="contact-details">
-            <a class="contact-link" href="mailto:hello@techualize.com">hello@techualize.com</a>
-            <span class="contact-note">Prefer email — it keeps everything in one thread.</span>
-          </address>
+      <section id="why" class="section why">
+        <div class="container why-grid">
+          <div class="why-copy">
+            <h2>Why teams choose me</h2>
+            <p class="why-intro">
+              Freelance doesn’t mean flaky. It means direct access, no layers,
+              and ownership from day one.
+            </p>
+            <ul class="why-list">
+              <li>
+                <strong>A decade in Rails</strong> — patterns, pitfalls, and
+                pragmatism, not tutorial code.
+              </li>
+              <li>
+                <strong>Peace of mind</strong> — realistic estimates, clear
+                communication, and predictable delivery.
+              </li>
+              <li>
+                <strong>Speed with care</strong> — shipping fast without cutting
+                the corners that hurt you later.
+              </li>
+              <li>
+                <strong>AI that fits production</strong> — agents and LLM
+                features grounded in your domain, not brittle demos.
+              </li>
+            </ul>
+          </div>
+          <aside class="why-aside">
+            <blockquote class="quote">
+              <p>
+                “I want visitors to feel the site before they read a line — then
+                stay for the substance.”
+              </p>
+              <footer>— The bar I hold for every engagement</footer>
+            </blockquote>
+          </aside>
         </div>
-        <form class="contact-form" id="contactForm" novalidate>
-          <label>
-            <span>Name</span>
-            <input type="text" name="name" id="contactName" autocomplete="name" placeholder="Your name" required />
-          </label>
-          <label>
-            <span>Email</span>
-            <input type="email" name="email" id="contactEmail" autocomplete="email" placeholder="you@company.com" required />
-          </label>
-          <label>
-            <span>What are you building?</span>
-            <textarea name="message" id="contactMessage" rows="4" placeholder="Stack, timeline, and how I can help…" required></textarea>
-          </label>
-          <p class="form-hint">
-            Opens your mail app with this message pre-filled. You can also write directly to <strong>hello@techualize.com</strong>.
-          </p>
-          <button type="submit" class="btn btn-primary btn-block">Send via email</button>
-        </form>
+      </section>
+
+      <section id="process" class="section process">
+        <div class="container">
+          <header class="section-head">
+            <h2>How we work together</h2>
+            <p>A simple rhythm so projects stay aligned.</p>
+          </header>
+          <ol class="process-steps">
+            <li>
+              <span class="step-num">01</span>
+              <h3>Discovery</h3>
+              <p>
+                Goals, constraints, and success criteria — aligned before a
+                single line of code.
+              </p>
+            </li>
+            <li>
+              <span class="step-num">02</span>
+              <h3>Proposal</h3>
+              <p>
+                Scope, milestones, and a clear path — no vague “we’ll figure it
+                out later.”
+              </p>
+            </li>
+            <li>
+              <span class="step-num">03</span>
+              <h3>Build &amp; ship</h3>
+              <p>
+                Iterative delivery with demos, feedback loops, and documentation
+                that lasts.
+              </p>
+            </li>
+            <li>
+              <span class="step-num">04</span>
+              <h3>Handoff</h3>
+              <p>
+                Your team can run with it — or I stay on for ongoing support if
+                you need it.
+              </p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="section cta-band">
+        <div class="container cta-inner">
+          <div>
+            <h2>Rails rescue, AI agents, or a full product?</h2>
+            <p>
+              Tell me about your timeline and stack — I’ll reply with honest
+              next steps.
+            </p>
+          </div>
+          <a href="#contact" class="btn btn-primary btn-lg">Get in touch</a>
+        </div>
+      </section>
+
+      <section id="contact" class="section contact">
+        <div class="container contact-grid">
+          <div>
+            <h2>Contact</h2>
+            <p class="contact-lead">
+              Ready when you are. Share a bit about your project and I’ll get
+              back to you shortly.
+            </p>
+            <address class="contact-details">
+              <a class="contact-link" href="mailto:techualize@gmail.com"
+                >techualize@gmail.com</a
+              >
+              <span class="contact-note"
+                >Prefer email — it keeps everything in one thread.</span
+              >
+            </address>
+          </div>
+          <form
+            class="contact-form"
+            id="contactForm"
+            action="https://api.web3forms.com/submit"
+            method="POST"
+          >
+            <input
+              type="hidden"
+              name="access_key"
+              value="70fd6188-414f-40ec-ae1e-e472ca77d859"
+            />
+            <label>
+              <span>Name</span>
+              <input
+                type="text"
+                name="name"
+                id="contactName"
+                autocomplete="name"
+                placeholder="Your name"
+                required
+              />
+            </label>
+            <label>
+              <span>Email</span>
+              <input
+                type="email"
+                name="email"
+                id="contactEmail"
+                autocomplete="email"
+                placeholder="you@company.com"
+                required
+              />
+            </label>
+            <label>
+              <span>What are you building?</span>
+              <textarea
+                name="message"
+                id="contactMessage"
+                rows="4"
+                placeholder="Stack, timeline, and how I can help…"
+                required
+              ></textarea>
+            </label>
+            <p class="form-hint">
+              Sends securely through Web3Forms. You can still write directly to
+              <strong>hello@techualize.com</strong>.
+            </p>
+            <button type="submit" class="btn btn-primary btn-block">
+              Submit Form
+            </button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-inner">
+        <span class="footer-brand">© <span id="year"></span> Techualize</span>
+        <span class="footer-meta">Built with care · techualize.com</span>
       </div>
-    </section>
-  </main>
+    </footer>
 
-  <footer class="site-footer">
-    <div class="container footer-inner">
-      <span class="footer-brand">© <span id="year"></span> Techualize</span>
-      <span class="footer-meta">Built with care · techualize.com</span>
-    </div>
-  </footer>
-
-  <script src="assets/js/main.js"></script>
-</body>
+    <script src="assets/js/main.js"></script>
+  </body>
 </html>
