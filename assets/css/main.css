@@ -748,6 +748,66 @@ main {
   letter-spacing: 0.01em;
 }
 
+/* Background strip */
+.background-strip {
+  padding: clamp(2rem, 5vw, 3rem) 0;
+  border-block: 1px solid var(--border);
+  background: linear-gradient(
+    180deg,
+    rgba(14, 19, 34, 0.55) 0%,
+    rgba(14, 19, 34, 0.25) 100%
+  );
+}
+
+.background-inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+}
+
+@media (max-width: 780px) {
+  .background-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+.background-inner .eyebrow {
+  display: block;
+  margin: 0 0 0.6rem;
+}
+
+.background-copy {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 36rem;
+}
+
+.background-copy strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.background-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.background-tags li {
+  font-size: 0.8125rem;
+  color: var(--text);
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+}
+
 /* Why */
 .why-grid {
   display: grid;
